@@ -6,6 +6,7 @@ from selenium.webdriver.common.keys import Keys
 # from operator import itemgetter
 import time
 import csv
+import schedule
 
 import Bot
 import SecretKeys
@@ -15,7 +16,7 @@ FRANKEN = ["Seeeb", "Sebb", "Marco", "chris", "Wolfi", "taxi", "Nico", "Fritzi"]
 
 
 def get_table_total(data: list) -> str:
-    list_sorted = sorted(data, key=lambda row: row["points"], reverse=True)
+    list_sorted = sorted(data, key=lambda row: int(row["points"]), reverse=True)
     return_string = "|{:1s}|{:4s}|{:5s}|{:1s}|{:11s}\n".format("#", "Name", "Punkte", "+", "Teamwert")
     for i, player in enumerate(list_sorted):
         rank = f"{i + 1}."
@@ -31,13 +32,13 @@ def get_table_total(data: list) -> str:
 
 
 def get_last_matchday(data):
-    list_sorted = sorted(data, key=lambda row: row["plus"], reverse=True)
+    list_sorted = sorted(data, key=lambda row: int(row["plus"]), reverse=True)
     return_string = "{:3s} {:8s} {:6s}\n".format("|+", "|Name", "|Gesamtpunkte")
     for player in list_sorted:
         # rank = f"{i+1}."
-        name = str(player["name"])
-        points = str(player["points"])
-        plus = str(player["plus"])
+        name = player["name"]
+        points = player["points"]
+        plus = player["plus"]
         # networth = str(player["networth"])
 
         return_string += "+{:3s} {:8s} {:6s}\n".format(plus, name, points)
@@ -58,18 +59,18 @@ def franken_vs_jecken(data):
     for player in data:
         total_player += 1
         if player["name"] in FRANKEN:
-            total_pts_franken += player["points"]
+            total_pts_franken += int(player["points"])
             if best_rank_franken == 0:
                 best_rank_franken = total_player
             franken += 1
         else:
-            total_pts_jecken += player["points"]
+            total_pts_jecken += int(player["points"])
             if best_rank_jecken == 0:
                 best_rank_jecken = total_player
             jecken += 1
 
-    avg_pts_franken = total_pts_franken / franken
-    avg_pts_jecken = total_pts_jecken / jecken
+    avg_pts_franken = int(total_pts_franken / franken)
+    avg_pts_jecken = int(total_pts_jecken / jecken)
     smiley = ":("
     if avg_pts_jecken < avg_pts_franken:
         smiley = ":)"
@@ -78,24 +79,36 @@ def franken_vs_jecken(data):
     # print(return_string)
     return return_string
 
+
 def read_csv(file_name="latest.csv"):
     with open(file_name) as f:
         reader = csv.DictReader(f)
         data = list(reader)
-        #print(data)
+        # print(data)
         return data
 
-def main():
-    #Comunio.comunio_login()
 
-    #data = read_csv()
-    #Comunio.write_csv(data)
-    #print(get_table_total(data))
+def weekly_notif_to_bot():
+    data = read_csv()
+    table = get_table_total(data)
+    Bot.weekly_notification(table)
+
+def main():
+    # Comunio.comunio_login()
+
+    # data = read_csv()
+    # Comunio.write_csv(data)
+    # print(get_table_total(data))
     # print(get_last_matchday(data))
     # franken_vs_jecken(data)
-    #print(read_csv())
+    # print(read_csv())
 
     Bot.init_bot()
+    schedule.every().thursday.at("12:02").do(weekly_notif_to_bot)
+
+    while True:
+        schedule.run_pending()
+        time.sleep(1)
 
 
 if __name__ == '__main__':
