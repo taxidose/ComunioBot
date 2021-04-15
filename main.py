@@ -81,11 +81,13 @@ def franken_vs_jecken(data):
 
 
 def read_csv(file_name="latest.csv"):
-    with open(file_name, "r") as f:
-        reader = csv.DictReader(f)
-        data = list(reader)
-        # print(data)
-        return data
+    # with open(file_name, "r") as f:
+    f = open("/home/pi/PycharmProjects/ComunioBot/" + "latest.csv")
+    reader = csv.DictReader(f)
+    data = list(reader)
+    # print(data)
+    f.close()
+    return data
 
 
 def weekly_notif_to_bot():
