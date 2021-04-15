@@ -19,10 +19,10 @@ def get_table_total(data: list) -> str:
     return_string = "|{:1s}|{:4s}|{:5s}|{:1s}|{:11s}\n".format("#", "Name", "Punkte", "+", "Teamwert")
     for i, player in enumerate(list_sorted):
         rank = f"{i + 1}."
-        name = str(player["name"])
-        points = str(player["points"])
-        plus = str(player["plus"])
-        networth = str(player["networth"])
+        name = player["name"]
+        points = player["points"]
+        plus = player["plus"]
+        networth = player["networth"]
 
         return_string += "{:3s} {:8s} {:5s} {:3s} {:12s}\n".format(rank, name, points, plus, networth)
         # print(rank)

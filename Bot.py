@@ -33,7 +33,6 @@ def start(update, context):
 def table_total(update, context):
 
     data = main.read_csv()
-    table = main.get_table_total(data)
     table_string = main.get_table_total(data)
 
     context.bot.send_message(chat_id=update.effective_chat.id, text=table_string)
