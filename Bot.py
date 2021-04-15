@@ -3,8 +3,7 @@ from telegram.ext import CommandHandler
 import urllib
 import requests
 import logging
-
-import Comunio
+# import Comunio
 import main
 from SecretKeys import *
 
@@ -49,14 +48,14 @@ def table_total(update, context):
     table_string = main.get_table_total(data)
     update.message.reply_text(table_string)
     # context.bot.send_message(chat_id=update.effective_chat.id, text=table_string)
-    logging.info(" -- table total after request sent")
+    logging.info("table total after request sent")
 
 
 def last_matchday(update, context):
     data = main.read_csv()
     last_matchday_string = main.get_last_matchday(data)
     update.message.reply_text(last_matchday_string)
-    logging.info(" -- last matchday after request sent")
+    logging.info("last matchday after request sent")
 
 
 def f_vs_j(update, context):
@@ -64,14 +63,14 @@ def f_vs_j(update, context):
     f_vs_j_string = main.franken_vs_jecken(data)
     update.message.reply_text(f_vs_j_string)
     # context.bot.send_message(chat_id=update.effective_chat.id, text=f_vs_j_string)
-    logging.info(" -- franken_vs_jecken after request sent")
+    logging.info("franken_vs_jecken after request sent")
 
 
 def weekly_notification(message):
     url_notif = 'https://api.telegram.org/bot%s/sendMessage?chat_id=%s&text=%s' % (
         API_KEY, CHAT_ID, urllib.parse.quote_plus(message))
     _ = requests.get(url_notif)
-    logging.info(" -- weekly table notficiation sent")
+    logging.info("weekly table notficiation sent")
 
 #
 #

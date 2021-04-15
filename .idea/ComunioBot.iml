@@ -4,6 +4,7 @@
     <content url="file://$MODULE_DIR$/../ComuniBot">
       <excludeFolder url="file://$MODULE_DIR$/../ComuniBot/venv" />
     </content>
+    <content url="file://$MODULE_DIR$" />
     <orderEntry type="jdk" jdkName="Python 3.7 (ComunioBot)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
   </component>

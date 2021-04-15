@@ -3,16 +3,21 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.chrome.options import Options
+
 import time
 import SecretKeys
 import csv
 from datetime import date
 
 PATH = "/usr/bin/chromedriver"
-driver = webdriver.Chrome(PATH)
+options = Options()
+options.add_argument('--headless')
+driver = webdriver.Chrome(chrome_options=options, executable_path=PATH)
 
 
 def comunio_login():
+    print("logging in to comunio.................")
     driver.get("https://www.comunio.de")
     try:
         cookie_accept_btn = WebDriverWait(driver, 15).until(
@@ -40,7 +45,10 @@ def comunio_login():
         login_field_pw.send_keys(Keys.RETURN)
         time.sleep(0.666)
 
+        print("successfully logged in to comunio........")
+
     except:
+        print("-----!-------comunio login failed-------!--------")
         driver.quit()
 
 
@@ -69,6 +77,7 @@ def receive_data() -> list:
     driver.quit()
     return player_data
 
+
 # latest.csv for reading in data and <date>.csv for history
 def write_csv(input_data):
     file_name = date.today().strftime("%d_%m_%Y") + ".csv"
@@ -90,8 +99,3 @@ def write_csv(input_data):
                 writer.writerow(data)
     except IOError:
         print("I/O error")
-
-
-
-
-
