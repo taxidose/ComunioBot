@@ -7,7 +7,9 @@ import logging
 import Comunio
 import main
 from SecretKeys import *
-from time import sleep, localtime, strftime
+
+
+# from time import sleep, localtime, strftime
 
 
 # message = "testmessage"
@@ -18,31 +20,50 @@ def init_bot():
     logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
     start_handler = CommandHandler("start", start)
-    table_total_handler = CommandHandler("t", table_total)
-    f_vs_j_handler = CommandHandler("vs", f_vs_j)
+    info_handler = CommandHandler(("info", "i", "help"), info)
+    table_total_handler = CommandHandler(("t", "tabelle", "gesamt"), table_total)
+    last_matchday_handler = CommandHandler(("l", "letzter", "spieltag"), last_matchday)
+    f_vs_j_handler = CommandHandler(("vs", "franken", "jecken", "lol"), f_vs_j)
 
     dispatcher.add_handler(start_handler)
+    dispatcher.add_handler(info_handler)
     dispatcher.add_handler(table_total_handler)
+    dispatcher.add_handler(last_matchday_handler)
     dispatcher.add_handler(f_vs_j_handler)
 
     updater.start_polling()
+    updater.idle()
 
 
 def start(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="Servus")
+    update.message.reply_text("Servus")
+
+
+def info(update, context):
+    update.message.reply_text(
+        f"ComunioBot v0.1\nBefehle:\n/t --> Gesamttabelle\n/l --> letzter Spieltag\n/vs --> Franken vs Jecken")
 
 
 def table_total(update, context):
     data = main.read_csv()
     table_string = main.get_table_total(data)
-
-    context.bot.send_message(chat_id=update.effective_chat.id, text=table_string)
+    update.message.reply_text(table_string)
+    # context.bot.send_message(chat_id=update.effective_chat.id, text=table_string)
     logging.info(" -- table total after request sent")
+
+
+def last_matchday(update, context):
+    data = main.read_csv()
+    last_matchday_string = main.get_last_matchday(data)
+    update.message.reply_text(last_matchday_string)
+    logging.info(" -- last matchday after request sent")
+
 
 def f_vs_j(update, context):
     data = main.read_csv()
     f_vs_j_string = main.franken_vs_jecken(data)
-    context.bot.send_message(chat_id=update.effective_chat.id, text=f_vs_j_string)
+    update.message.reply_text(f_vs_j_string)
+    # context.bot.send_message(chat_id=update.effective_chat.id, text=f_vs_j_string)
     logging.info(" -- franken_vs_jecken after request sent")
 
 

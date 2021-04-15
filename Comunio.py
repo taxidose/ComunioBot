@@ -8,19 +8,19 @@ import SecretKeys
 import csv
 from datetime import date
 
-PATH = "C:\Program Files (x86)\chromedriver.exe"
+PATH = "/usr/bin/chromedriver"
 driver = webdriver.Chrome(PATH)
 
 
 def comunio_login():
     driver.get("https://www.comunio.de")
     try:
-        cookie_accept_btn = WebDriverWait(driver, 10).until(
+        cookie_accept_btn = WebDriverWait(driver, 15).until(
             EC.presence_of_element_located((By.XPATH, """/html/body/div[1]/div/div/div/div[2]/div/button[2]""")))
         time.sleep(1.5)
         cookie_accept_btn.click()
 
-        login_btn = WebDriverWait(driver, 10).until(
+        login_btn = WebDriverWait(driver, 15).until(
             EC.presence_of_element_located(
                 (By.XPATH, """/html/body/grid/level[1]/div/login-page/div/level/rail[2]/lore[4]/div[2]/a[1]""")))
         time.sleep(1.72)
@@ -48,7 +48,7 @@ def comunio_login():
 def receive_data() -> list:
     driver.get("https://www.comunio.de/standings/total")
     # try:
-    standings_tabelle = WebDriverWait(driver, 10).until(
+    standings_tabelle = WebDriverWait(driver, 15).until(
         EC.presence_of_element_located((By.XPATH, """//*[@id="standings"]/div/div/div[1]/div[3]/div[3]""")))
     standings_tabelle_list = standings_tabelle.text.split()
     standings_tabelle_list.insert(0, "1.")

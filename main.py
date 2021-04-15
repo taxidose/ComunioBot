@@ -81,7 +81,7 @@ def franken_vs_jecken(data):
 
 
 def read_csv(file_name="latest.csv"):
-    with open(file_name) as f:
+    with open(file_name, "r") as f:
         reader = csv.DictReader(f)
         data = list(reader)
         # print(data)
@@ -93,6 +93,13 @@ def weekly_notif_to_bot():
     table = get_table_total(data)
     Bot.weekly_notification(table)
 
+
+def update_data():
+    Comunio.comunio_login()
+    data = Comunio.receive_data()
+    Comunio.write_csv(data)
+    print("Data updated.....................")
+
 def main():
     # Comunio.comunio_login()
 
@@ -103,8 +110,11 @@ def main():
     # franken_vs_jecken(data)
     # print(read_csv())
 
+    update_data()
+
     Bot.init_bot()
-    schedule.every().thursday.at("12:02").do(weekly_notif_to_bot)
+    schedule.every().tuesday.at("09:30").do(weekly_notif_to_bot)
+    schedule.every().monday.at("23:30").do(update_data)
 
     while True:
         schedule.run_pending()
