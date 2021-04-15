@@ -4,6 +4,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
+import logging
 
 import time
 import SecretKeys
@@ -14,10 +15,11 @@ PATH = "/usr/bin/chromedriver"
 options = Options()
 options.add_argument('--headless')
 driver = webdriver.Chrome(chrome_options=options, executable_path=PATH)
+logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 
 
 def comunio_login():
-    print("logging in to comunio.................")
+    logging.info("logging in to comunio..........................")
     driver.get("https://www.comunio.de")
     try:
         cookie_accept_btn = WebDriverWait(driver, 15).until(
@@ -45,15 +47,16 @@ def comunio_login():
         login_field_pw.send_keys(Keys.RETURN)
         time.sleep(0.666)
 
-        print("successfully logged in to comunio........")
+        logging.info("successfully logged in to comunio.......................")
 
     except:
-        print("-----!-------comunio login failed-------!--------")
+        logging.info("!!!!!!!-!-!-!-!-!-!- COMUNIO LOGIN FAILED -!-!-!-!-!-!-!!!!!!!!!")
         driver.quit()
 
 
 # returns list of dictionaries with keys: rank, name, points, plus, networth for each player
 def receive_data() -> list:
+    logging.info("receiving data....................................")
     driver.get("https://www.comunio.de/standings/total")
     # try:
     standings_tabelle = WebDriverWait(driver, 15).until(
@@ -75,11 +78,13 @@ def receive_data() -> list:
                             "networth": standings_tabelle_list[attribute_counter + 2]})
         attribute_counter += 5
     driver.quit()
+    logging.info("data received....................................")
     return player_data
 
 
 # latest.csv for reading in data and <date>.csv for history
 def write_csv(input_data):
+    logging.info("writing csv........................................")
     file_name = date.today().strftime("%d_%m_%Y") + ".csv"
     latest_file = "latest.csv"
     csv_columns = ["rank", "name", "points", "plus", "networth"]

@@ -29,7 +29,7 @@ def init_bot():
     dispatcher.add_handler(table_total_handler)
     dispatcher.add_handler(last_matchday_handler)
     dispatcher.add_handler(f_vs_j_handler)
-
+    logging.info("...............................bot initialized")
     updater.start_polling()
     updater.idle()
 
